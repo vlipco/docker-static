@@ -1,0 +1,3 @@
+nginx: /usr/local/nginx/sbin/nginx -p /nginx/ -c conf/nginx.conf
+access: tail -f /nginx/logs/access
+error: tail -f /nginx/logs/error
