@@ -7,7 +7,7 @@ RUN apt-get update && apt-get -y install build-essential zlib1g-dev libpcre3 lib
 ENV NPS_VERSION 1.8.31.4
 ENV NGINX nginx-1.6.1
 
-#Download and install nginx, ngx_pagespeed and psol.
+#Download and install nginx, ngx_pagespeed and psol, then file structure & shoreman
 RUN cd /tmp && \
 	curl -Ls "https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.tar.gz" \
 	| tar xfz - && \
@@ -16,17 +16,13 @@ RUN cd /tmp && \
  	curl -Ls "http://nginx.org/download/$NGINX.tar.gz" \
 	| tar xzf - && \
  	cd $NGINX && ./configure --add-module=/tmp/ngx_pagespeed-release-${NPS_VERSION}-beta && \
- 	make && make install && apt-get clean all
-
-# install shoreman
-RUN cd /usr/local/bin && curl -Ls https://github.com/davidpelaez/shoreman/raw/dpt-additions/shoreman.sh > shoreman && chmod +rx /usr/local/bin/shoreman
-
-# file structure
-ADD conf /nginx/conf
-RUN mkdir -p /nginx/logs && touch /nginx/logs/error /nginx/logs/access 
-
-ONBUILD ADD . /app
+ 	make && make install && apt-get clean all && \
+ 	mkdir -p /nginx/logs && touch /nginx/logs/error /nginx/logs/access && cd /usr/local/bin && \
+	curl -Ls https://github.com/davidpelaez/shoreman/raw/dpt-additions/shoreman.sh > shoreman && \
+	chmod +rx /usr/local/bin/shoreman
 
 WORKDIR /app
-EXPOSE 5000
 CMD ["/usr/local/bin/shoreman", "/nginx/conf/Procfile"]
+ONBUILD ADD . /app
+EXPOSE 5000
+ADD conf /nginx/conf
