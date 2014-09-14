@@ -10,11 +10,11 @@ ENV NGINX nginx-1.6.1
 #Download and install nginx, ngx_pagespeed and psol, then file structure & shoreman
 RUN cd /tmp && \
 	curl -Ls "https://github.com/pagespeed/ngx_pagespeed/archive/release-${NPS_VERSION}-beta.tar.gz" \
-	| tar xfz - && \
+	| tar xfz --no-same-permissions - && \
  	curl -Ls "https://dl.google.com/dl/page-speed/psol/$NPS_VERSION.tar.gz" \
-	| tar xzf - -C ngx_pagespeed-release-${NPS_VERSION}-beta && \
+	| tar xzf --no-same-permissions - -C ngx_pagespeed-release-${NPS_VERSION}-beta && \
  	curl -Ls "http://nginx.org/download/$NGINX.tar.gz" \
-	| tar xzf - && \
+	| tar xzf --no-same-permissions - && \
  	cd $NGINX && ./configure --add-module=/tmp/ngx_pagespeed-release-${NPS_VERSION}-beta && \
  	make && make install && apt-get clean all && \
  	mkdir -p /nginx/logs && touch /nginx/logs/error /nginx/logs/access && cd /usr/local/bin && \
