@@ -1,1 +1,1 @@
-FROM vlipco/static
+FROM quay.io/vlipco/static
