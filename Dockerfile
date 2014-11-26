@@ -2,7 +2,7 @@ FROM ubuntu:14.04
 MAINTAINER David Pelaez <david@vlipco.co>
 
 # install dependencies
-RUN apt-get update && apt-get -y install build-essential zlib1g-dev libpcre3 libpcre3-dev curl
+RUN apt-get update && apt-get -y install git build-essential zlib1g-dev libpcre3 libpcre3-dev curl
 
 #Download and install nginx, ngx_pagespeed and psol, then file structure & shoreman
 RUN export NPS_VERSION=1.8.31.4 && export NGINX=nginx-1.6.1 && \
@@ -31,7 +31,7 @@ RUN curl -SLO "http://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x
   && grep " node-v$NODE_VERSION-linux-x64.tar.gz\$" SHASUMS256.txt.asc | sha256sum -c - \
   && tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt.asc \
-  && npm install -g npm@"$NPM_VERSION" && npm install -g broccoli-cli node-sass \
+  && npm install -g npm@"$NPM_VERSION" && npm install -g broccoli-cli node-sass bower \
   && npm cache clear
 
 WORKDIR /app
@@ -41,7 +41,8 @@ COPY bin /nginx/bin
 
 ONBUILD COPY package.json /app/
 ONBUILD RUN npm install
+ONBUILD COPY bower.json /app/
+ONBUILD RUN bower --allow-root install
 ONBUILD COPY . /app
-
 
 CMD ["/nginx/bin/init"]
