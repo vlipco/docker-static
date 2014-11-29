@@ -41,8 +41,6 @@ COPY bin /nginx/bin
 
 ONBUILD COPY package.json /app/
 ONBUILD RUN npm install
-ONBUILD COPY bower.json /app/
-ONBUILD RUN bower --allow-root install
 ONBUILD COPY . /app
 
 CMD ["/nginx/bin/init"]
