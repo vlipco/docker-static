@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if bower --allow-root install && broccoli build html; then
+if broccoli build html; then
   exec /usr/local/bin/shoreman /nginx/conf/Procfile
 else
   echo "The broccoli build failed, exiting"
